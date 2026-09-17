@@ -1,23 +1,11 @@
 import { CaretLeft, ClockCounterClockwise, Gear } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { formatCents } from '../domain/money';
-import { netCents } from '../domain/ledger';
+import { biggestWinner } from '../domain/ledger';
 import { createId } from '../domain/types';
 import { IconAvatar } from '../components/IconAvatar';
 import { RosterList } from '../components/RosterList';
 import { useApp } from '../state/AppContext';
-
-function biggestWinner(session: import('../domain/types').Session, players: import('../domain/types').Player[]) {
-  let best: { name: string; net: number } | null = null;
-  for (const playerId of session.playerIds) {
-    const net = netCents(session, playerId);
-    if (!best || net > best.net) {
-      const player = players.find((p) => p.id === playerId);
-      best = { name: player?.name ?? '?', net };
-    }
-  }
-  return best;
-}
 
 export function HomeView() {
   const { state, dispatch, goToSession, goToHistory, goToSettings, openHistoryDetail } = useApp();
@@ -110,7 +98,7 @@ export function HomeView() {
               Recent nights
             </h2>
             {recentNights.map((session) => {
-              const winner = biggestWinner(session, state.players);
+              const winner = biggestWinner(session);
               return (
                 <button
                   key={session.id}
@@ -129,7 +117,7 @@ export function HomeView() {
                     <p style={{ fontWeight: 600 }}>{new Date(session.endedAt ?? session.startedAt).toLocaleDateString()}</p>
                     {winner && (
                       <p className="gold" style={{ fontSize: 13 }}>
-                        {winner.name} +{formatCents(winner.net, currency)}
+                        {state.players.find((p) => p.id === winner.playerId)?.name ?? '?'} +{formatCents(winner.netCents, currency)}
                       </p>
                     )}
                   </div>

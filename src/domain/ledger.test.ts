@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   addEntry,
   allCounted,
+  biggestWinner,
   clearFinalCount,
   countedTotalCents,
   editEntry,
@@ -73,6 +74,18 @@ describe('ledger', () => {
     expect(allCounted(session)).toBe(false);
     session = setFinalCount(session, 'p2', 200);
     expect(allCounted(session)).toBe(true);
+  });
+
+  it('biggestWinner picks the highest net player and returns null for an empty roster', () => {
+    const session = makeSession({
+      entries: [
+        { id: 'e1', playerId: 'p1', kind: 'buy-in', amountCents: 2000, at: 1 },
+        { id: 'e2', playerId: 'p2', kind: 'buy-in', amountCents: 2000, at: 2 },
+      ],
+      finalCounts: { p1: 500, p2: 3500 },
+    });
+    expect(biggestWinner(session)).toEqual({ playerId: 'p2', netCents: 1500 });
+    expect(biggestWinner(makeSession({ playerIds: [] }))).toBeNull();
   });
 
   it('addEntry, editEntry, removeEntry, setFinalCount and clearFinalCount return new objects without mutating the input', () => {

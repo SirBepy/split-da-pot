@@ -34,6 +34,17 @@ export function netCents(session: Session, playerId: string): number {
   return counted + cashOuts - buyIns;
 }
 
+export function biggestWinner(session: Session): { playerId: string; netCents: number } | null {
+  let best: { playerId: string; netCents: number } | null = null;
+  for (const playerId of session.playerIds) {
+    const net = netCents(session, playerId);
+    if (!best || net > best.netCents) {
+      best = { playerId, netCents: net };
+    }
+  }
+  return best;
+}
+
 export function addEntry(session: Session, entry: Omit<LedgerEntry, 'id'>): Session {
   const newEntry: LedgerEntry = { ...entry, id: createId() };
   return { ...session, entries: [...session.entries, newEntry] };
