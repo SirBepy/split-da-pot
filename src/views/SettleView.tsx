@@ -1,10 +1,10 @@
 import { ArrowDown, ArrowUp, Check, Minus } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 import { IconAvatar } from '../components/IconAvatar';
-import { netCents, remainingCents } from '../domain/ledger';
-import { suggestSettlement } from '../domain/settle';
+import { remainingCents } from '../domain/ledger';
 import { formatCents } from '../domain/money';
 import { useApp } from '../state/AppContext';
+import { settlementView } from './settlementView';
 
 export function SettleView() {
   const { state, activeSession, goToCount, finishNight } = useApp();
@@ -20,15 +20,7 @@ export function SettleView() {
 
   if (guardFailed || !session) return null;
 
-  const nets = session.playerIds.map((playerId) => ({ playerId, netCents: netCents(session, playerId) }));
-  const transactions = suggestSettlement(nets);
-
-  function playerName(id: string) {
-    return state.players.find((p) => p.id === id)?.name ?? '?';
-  }
-  function playerIcon(id: string) {
-    return state.players.find((p) => p.id === id)?.icon ?? 'crown';
-  }
+  const { nets, transactions, playerName, playerIcon } = settlementView(session, state.players);
 
   function toggleChecked(index: number) {
     setChecked((prev) => {

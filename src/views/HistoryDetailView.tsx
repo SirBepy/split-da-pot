@@ -1,9 +1,8 @@
 import { ArrowDown, ArrowUp, CaretLeft, Minus } from '@phosphor-icons/react';
 import { IconAvatar } from '../components/IconAvatar';
-import { netCents } from '../domain/ledger';
 import { formatCents } from '../domain/money';
-import { suggestSettlement } from '../domain/settle';
 import { useApp } from '../state/AppContext';
+import { settlementView } from './settlementView';
 
 export function HistoryDetailView() {
   const { state, historyDetailId, backFromHistoryDetail } = useApp();
@@ -12,15 +11,7 @@ export function HistoryDetailView() {
 
   if (!session) return null;
 
-  const nets = session.playerIds.map((playerId) => ({ playerId, netCents: netCents(session, playerId) }));
-  const transactions = suggestSettlement(nets);
-
-  function playerName(id: string) {
-    return state.players.find((p) => p.id === id)?.name ?? '?';
-  }
-  function playerIcon(id: string) {
-    return state.players.find((p) => p.id === id)?.icon ?? 'crown';
-  }
+  const { nets, transactions, playerName, playerIcon } = settlementView(session, state.players);
 
   return (
     <div className="screen">
