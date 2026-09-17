@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { potTotalCents } from '../domain/ledger';
 import { defaultState } from '../storage/store';
 import { reducer } from './reducer';
 
@@ -102,6 +103,25 @@ describe('reducer', () => {
     expect(state.sessions[0].entries).toEqual([
       { id: 'e2', playerId: 'p1', kind: 'buy-in', amountCents: 1000, at: 12 },
     ]);
+  });
+
+  it('edits an entry amount in place, updating the pot total but keeping id, kind and timestamp', () => {
+    let state = withPlayers();
+    state = reducer(state, {
+      type: 'START_SESSION',
+      session: {
+        id: 's1',
+        startedAt: 10,
+        endedAt: null,
+        playerIds: ['p1', 'p2'],
+        entries: [{ id: 'e1', playerId: 'p1', kind: 'buy-in', amountCents: 2000, at: 11 }],
+        finalCounts: {},
+        status: 'active',
+      },
+    });
+    state = reducer(state, { type: 'EDIT_ENTRY', sessionId: 's1', entryId: 'e1', amountCents: 2500 });
+    expect(state.sessions[0].entries[0]).toEqual({ id: 'e1', playerId: 'p1', kind: 'buy-in', amountCents: 2500, at: 11 });
+    expect(potTotalCents(state.sessions[0])).toBe(2500);
   });
 
   it('adds a latecomer to an in-progress session without duplicating an existing player', () => {

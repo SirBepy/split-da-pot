@@ -1,6 +1,6 @@
 import { PencilSimple, Trash } from '@phosphor-icons/react';
 import { useState } from 'react';
-import { formatCents } from '../domain/money';
+import { centsToInputValue, formatCents, parseAmountToCents } from '../domain/money';
 import type { Player } from '../domain/types';
 import { useApp } from '../state/useApp';
 import { AmountEntry } from './AmountEntry';
@@ -20,6 +20,8 @@ export function PlayerSheet({ sessionId, player, onClose }: PlayerSheetProps) {
   const [tab, setTab] = useState<Tab>('buyin');
   const [editingName, setEditingName] = useState(false);
   const [name, setName] = useState(player.name);
+  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState('');
   const currency = state.settings.currency;
   const session = activeSession;
 
@@ -35,6 +37,14 @@ export function PlayerSheet({ sessionId, player, onClose }: PlayerSheetProps) {
     const trimmed = name.trim() || player.name;
     dispatch({ type: 'RENAME_PLAYER', playerId: player.id, name: trimmed });
     setEditingName(false);
+  }
+
+  function commitEntryEdit(entryId: string) {
+    const cents = parseAmountToCents(editValue);
+    if (cents !== null && cents > 0) {
+      dispatch({ type: 'EDIT_ENTRY', sessionId, entryId, amountCents: cents });
+    }
+    setEditingEntryId(null);
   }
 
   const entries = (session?.entries ?? [])
@@ -102,10 +112,36 @@ export function PlayerSheet({ sessionId, player, onClose }: PlayerSheetProps) {
           {entries.length === 0 && <p className="dim">No entries yet.</p>}
           {entries.map((entry) => (
             <div key={entry.id} className="card player-row">
-              <span className={entry.kind === 'buy-in' ? 'gold' : 'danger-text'} style={{ fontWeight: 700 }}>
-                {entry.kind === 'buy-in' ? '+' : '-'}
-                {formatCents(entry.amountCents, currency)}
-              </span>
+              {editingEntryId === entry.id ? (
+                <input
+                  className="money-input"
+                  style={{ width: 96 }}
+                  inputMode="decimal"
+                  autoFocus
+                  value={editValue}
+                  onChange={(event) => setEditValue(event.target.value)}
+                  onBlur={() => commitEntryEdit(entry.id)}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter') commitEntryEdit(entry.id);
+                  }}
+                  aria-label="Edit entry amount"
+                />
+              ) : (
+                <button
+                  type="button"
+                  aria-label={`Edit ${entry.kind === 'buy-in' ? 'buy-in' : 'cash-out'} amount`}
+                  style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit' }}
+                  onClick={() => {
+                    setEditingEntryId(entry.id);
+                    setEditValue(centsToInputValue(entry.amountCents));
+                  }}
+                >
+                  <span className={entry.kind === 'buy-in' ? 'gold' : 'danger-text'} style={{ fontWeight: 700 }}>
+                    {entry.kind === 'buy-in' ? '+' : '-'}
+                    {formatCents(entry.amountCents, currency)}
+                  </span>
+                </button>
+              )}
               <span className="dim" style={{ flex: 1, fontSize: 12 }}>
                 {new Date(entry.at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
               </span>

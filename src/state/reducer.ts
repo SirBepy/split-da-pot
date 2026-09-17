@@ -1,6 +1,7 @@
 import {
   addEntry,
   clearFinalCount,
+  editEntry,
   removeEntry,
   setFinalCount,
 } from '../domain/ledger';
@@ -19,6 +20,7 @@ export type Action =
       entry: { playerId: string; kind: LedgerEntryKind; amountCents: number; at: number };
     }
   | { type: 'REMOVE_ENTRY'; sessionId: string; entryId: string }
+  | { type: 'EDIT_ENTRY'; sessionId: string; entryId: string; amountCents: number }
   | { type: 'SET_FINAL_COUNT'; sessionId: string; playerId: string; amountCents: number }
   | { type: 'CLEAR_FINAL_COUNT'; sessionId: string; playerId: string }
   | { type: 'ENTER_COUNTING'; sessionId: string }
@@ -69,6 +71,11 @@ export function reducer(state: AppState, action: Action): AppState {
 
     case 'REMOVE_ENTRY':
       return updateSession(state, action.sessionId, (session) => removeEntry(session, action.entryId));
+
+    case 'EDIT_ENTRY':
+      return updateSession(state, action.sessionId, (session) =>
+        editEntry(session, action.entryId, { amountCents: action.amountCents }),
+      );
 
     case 'SET_FINAL_COUNT':
       return updateSession(state, action.sessionId, (session) =>
