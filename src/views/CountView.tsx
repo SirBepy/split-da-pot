@@ -2,9 +2,16 @@ import { CaretLeft } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
 import { centsToInputValue } from '../domain/money';
 import { IconAvatar } from '../components/IconAvatar';
+import { useAmountTick } from '../components/useAmountTick';
 import { formatCents, parseAmountToCents } from '../domain/money';
 import { allCounted, canSettle, remainingCents } from '../domain/ledger';
 import { useApp } from '../state/useApp';
+
+type PotState = 'neg' | 'zero' | 'pos';
+
+function potState(remaining: number): PotState {
+  return remaining < 0 ? 'neg' : remaining === 0 ? 'zero' : 'pos';
+}
 
 export function CountView() {
   const { state, dispatch, activeSession, backToSessionFromCount, requestSettle } = useApp();
@@ -21,28 +28,18 @@ export function CountView() {
   });
 
   const remaining = session ? remainingCents(session) : 0;
-  const prevNegativeRef = useRef(remaining < 0);
+  const tickClass = useAmountTick(remaining);
+  const prevStateRef = useRef(potState(remaining));
   const [pulse, setPulse] = useState(false);
-  const prevRemainingRef = useRef(remaining);
-  const [tickClass, setTickClass] = useState('');
 
+  // One-shot pulse on ENTERING negative or zero, never on staying there.
   useEffect(() => {
-    const isNegative = remaining < 0;
-    if (isNegative && !prevNegativeRef.current) {
-      setPulse(true);
-      const timer = setTimeout(() => setPulse(false), 400);
-      prevNegativeRef.current = isNegative;
-      return () => clearTimeout(timer);
-    }
-    prevNegativeRef.current = isNegative;
-  }, [remaining]);
-
-  useEffect(() => {
-    if (remaining === prevRemainingRef.current) return;
-    const direction = remaining > prevRemainingRef.current ? 'up' : 'down';
-    prevRemainingRef.current = remaining;
-    setTickClass(`pot-panel__amount--tick-${direction}`);
-    const timer = setTimeout(() => setTickClass(''), 200);
+    const now = potState(remaining);
+    const entered = now !== prevStateRef.current && now !== 'pos';
+    prevStateRef.current = now;
+    if (!entered) return;
+    setPulse(true);
+    const timer = setTimeout(() => setPulse(false), 400);
     return () => clearTimeout(timer);
   }, [remaining]);
 

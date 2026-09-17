@@ -35,7 +35,16 @@ Casino at midnight: near-black room, felt-green table surfaces, gold light on th
 ## Motion
 
 - 150-200ms ease-out on state changes; the left-in-pot number animates count-up/down on recount.
-- Red state pulses once on entering negative, then holds steady (no perpetual animation).
+- Red state pulses once on entering negative, green pulses once on hitting exactly zero; both hold steady after (no perpetual animation).
+- Sheets slide up 240ms / down 200ms with a backdrop fade; screens fade-drift in 180ms on navigation.
+- Press feedback: buttons/chips scale to ~0.96 while active; check marks pop in (scale 0.4 -> 1.15 -> 1, 200ms).
+- New list rows (log entries, Run It results) fade-drift in 200ms.
+
+## Interaction idioms
+
+- Tap-to-edit is the one renaming idiom: tap a name/label (players, pot labels) to edit inline; no pencil buttons.
+- Selection uses a permanent side circle: empty outline unselected, gold check when selected.
+- Destructive row actions are swipe-left to reveal, then tap Delete (iOS pattern); never a bare one-tap delete.
 
 ## Voice
 

@@ -5,6 +5,7 @@ import { IconAvatar } from '../components/IconAvatar';
 import { PlayerSheet } from '../components/PlayerSheet';
 import { formatCents } from '../domain/money';
 import { playerInvestedCents, potTotalCents } from '../domain/ledger';
+import { useAmountTick } from '../components/useAmountTick';
 import { useApp } from '../state/useApp';
 
 export function SessionView() {
@@ -12,6 +13,7 @@ export function SessionView() {
   const [selectedPlayerId, setSelectedPlayerId] = useState<string | null>(null);
   const [addingPlayer, setAddingPlayer] = useState(false);
   const currency = state.settings.currency;
+  const potTick = useAmountTick(activeSession ? potTotalCents(activeSession) : 0);
 
   if (!activeSession) return null;
   const session = activeSession;
@@ -24,7 +26,9 @@ export function SessionView() {
     <div className="screen">
       <div className="screen-header">
         <p className="screen-header__eyebrow">Live session</p>
-        <p className="display screen-header__title">{formatCents(potTotalCents(session), currency)} in da pot</p>
+        <p className={`display screen-header__title ${potTick}`}>
+          {formatCents(potTotalCents(session), currency)} in da pot
+        </p>
         <p className="screen-header__subline">{players.length} players in</p>
       </div>
       <div className="screen-body">

@@ -1,6 +1,7 @@
-import { ArrowCounterClockwise, Info, PencilSimple, X } from '@phosphor-icons/react';
+import { ArrowCounterClockwise, Info, X } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { IconAvatar } from '../components/IconAvatar';
+import { InlineEdit } from '../components/InlineEdit';
 import { formatCents, parseAmountToCents } from '../domain/money';
 import { splitPots, type Pot } from '../domain/runit';
 import { useApp } from '../state/useApp';
@@ -16,7 +17,6 @@ export function RunItView() {
   const [amount, setAmount] = useState('');
   const [winnerIds, setWinnerIds] = useState<Set<string>>(new Set());
   const [label, setLabel] = useState(autoLabel(0));
-  const [editingLabel, setEditingLabel] = useState(false);
 
   if (!activeSession) return null;
   const session = activeSession;
@@ -36,16 +36,10 @@ export function RunItView() {
     });
   }
 
-  function commitLabel() {
-    setLabel((prev) => prev.trim() || autoLabel(pots.length));
-    setEditingLabel(false);
-  }
-
   function addPot() {
     if (!canAdd || amountCents === null) return;
     setPots((prev) => [...prev, { label: label.trim() || autoLabel(prev.length), amountCents, winnerIds: [...winnerIds] }]);
     setLabel(autoLabel(pots.length + 1));
-    setEditingLabel(false);
     setAmount('');
     setWinnerIds(new Set());
   }
@@ -72,30 +66,15 @@ export function RunItView() {
         </div>
 
         <div className="card" style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {editingLabel ? (
-            <input
-              className="text-input"
-              autoFocus
-              value={label}
-              onChange={(event) => setLabel(event.target.value)}
-              onBlur={commitLabel}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') commitLabel();
-              }}
-              aria-label="Pot label"
-            />
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <label className="field-label" htmlFor="runit-pot-amount">
-                {label}
-              </label>
-              <button type="button" className="icon-btn" aria-label="Rename pot" onClick={() => setEditingLabel(true)}>
-                <PencilSimple size={14} />
-              </button>
-            </div>
-          )}
+          <InlineEdit
+            value={label}
+            ariaLabel="pot label"
+            onCommit={setLabel}
+            displayClassName="field-label"
+            displayStyle={{ minHeight: 32 }}
+          />
           <input
-            id="runit-pot-amount"
+            aria-label="Pot amount"
             className="text-input"
             inputMode="decimal"
             placeholder={`${currency}0`}
@@ -131,13 +110,13 @@ export function RunItView() {
             {players
               .filter((player) => result.perPlayer[player.id])
               .map((player) => (
-                <div key={player.id} className="card player-row">
+                <div key={player.id} className="card player-row row-in">
                   <IconAvatar icon={player.icon} size="sm" />
                   <p style={{ flex: 1, fontWeight: 600 }}>{player.name}</p>
                   <p className="display gold">{formatCents(result.perPlayer[player.id], currency)}</p>
                 </div>
               ))}
-            <div className="card" style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
+            <div className="card row-in" style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 6 }}>
               {result.breakdown.map((entry, index) => (
                 <p key={index} className="dim" style={{ fontSize: 13 }}>
                   {entry.potLabel}: {state.players.find((p) => p.id === entry.playerId)?.name ?? '?'} gets{' '}
@@ -153,7 +132,6 @@ export function RunItView() {
                 setAmount('');
                 setWinnerIds(new Set());
                 setLabel(autoLabel(0));
-                setEditingLabel(false);
               }}
             >
               <ArrowCounterClockwise size={16} /> Clear

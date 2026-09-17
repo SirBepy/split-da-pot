@@ -73,7 +73,7 @@ export function SettleView() {
           <button
             key={`${tx.fromPlayerId}-${tx.toPlayerId}-${index}`}
             type="button"
-            className="card tx-card"
+            className={`card tx-card ${checked.has(index) ? 'tx-card--done' : ''}`}
             style={{ width: '100%', textAlign: 'left' }}
             onClick={() => toggleChecked(index)}
           >
