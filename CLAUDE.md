@@ -17,4 +17,4 @@ Host-side bank for home poker cash games. Single-device, offline-first, localSto
 - Money is integer CENTS everywhere in src/domain; format/parse via src/domain/money.ts (comma decimals accepted).
 - Deployed to GitHub Pages at https://sirbepy.github.io/split-da-pot/ - vite base is `/split-da-pot/`, manifest icon paths must stay relative.
 - The Run It / Side Pots calculator (src/domain/runit.ts) never touches the ledger by design.
-- Settlement (src/domain/settle.ts) requires nets summing to exactly 0; UI guards on remaining === 0.
+- Settlement (src/domain/settle.ts) requires nets summing to exactly 0; UI guards on remaining === 0 AND every player explicitly counted (allCounted).

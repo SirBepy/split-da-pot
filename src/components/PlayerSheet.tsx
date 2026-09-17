@@ -130,7 +130,16 @@ export function PlayerSheet({ sessionId, player, onClose }: PlayerSheetProps) {
                 <button
                   type="button"
                   aria-label={`Edit ${entry.kind === 'buy-in' ? 'buy-in' : 'cash-out'} amount`}
-                  style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer', font: 'inherit' }}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    cursor: 'pointer',
+                    font: 'inherit',
+                    minHeight: 44,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                  }}
                   onClick={() => {
                     setEditingEntryId(entry.id);
                     setEditValue(centsToInputValue(entry.amountCents));
