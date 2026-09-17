@@ -9,7 +9,7 @@ The host of a recurring home poker night. Croatian friend group, euros, evenings
 ## Core job
 
 1. **Bank ledger during the night**: record each player's cash buy-ins (and mid-game cash-outs). The pot total is always visible.
-2. **End-of-night reconciliation**: host counts each player's chips and types the money value per player. The app live-shows what's left unaccounted in the pot; over-allocation goes negative and shows alarm-red. Only at exactly zero does the "suggested split" unlock.
+2. **End-of-night reconciliation**: host counts each player's chips and types the money value per player. The app live-shows what's left unaccounted in the pot; over-allocation goes negative and shows alarm-red. Only at exactly zero, with every player explicitly counted (a busted player is an explicit 0), does the "suggested split" unlock.
 3. **Suggested split**: who pays whom, minimizing the number of transactions.
 4. **Run It / Side Pots**: an in-hand calculator (all-ins, run-it-twice/thrice). Enter pot amounts and winners, get who takes what in chips. Purely informational, never touches the cash ledger.
 

@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowUp, Check, Minus } from '@phosphor-icons/react';
 import { useEffect, useState } from 'react';
 import { IconAvatar } from '../components/IconAvatar';
-import { remainingCents } from '../domain/ledger';
+import { allCounted, remainingCents } from '../domain/ledger';
 import { formatCents } from '../domain/money';
 import { useApp } from '../state/useApp';
 import { settlementView } from './settlementView';
@@ -11,7 +11,7 @@ export function SettleView() {
   const [checked, setChecked] = useState<Set<number>>(new Set());
   const currency = state.settings.currency;
   const session = activeSession;
-  const guardFailed = !session || remainingCents(session) !== 0;
+  const guardFailed = !session || remainingCents(session) !== 0 || !allCounted(session);
 
   useEffect(() => {
     if (guardFailed) goToCount();

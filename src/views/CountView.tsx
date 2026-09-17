@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { centsToInputValue } from '../domain/money';
 import { IconAvatar } from '../components/IconAvatar';
 import { formatCents, parseAmountToCents } from '../domain/money';
-import { remainingCents } from '../domain/ledger';
+import { allCounted, remainingCents } from '../domain/ledger';
 import { useApp } from '../state/useApp';
 
 export function CountView() {
@@ -70,11 +70,20 @@ export function CountView() {
     .join(' ');
 
   const isZero = remaining === 0;
-  const splitLabel = isZero
-    ? 'View da split'
-    : remaining > 0
+  const everyoneCounted = allCounted(session);
+  const uncounted = session.playerIds.filter((playerId) => !(playerId in session.finalCounts)).length;
+  // Zero remaining alone can be a coincidence (a forgotten player counts as 0),
+  // so the split also demands an explicit count for everyone.
+  const canSplit = isZero && everyoneCounted;
+  const splitLabel = !isZero
+    ? remaining > 0
       ? `${formatCents(remaining, currency)} left to count`
-      : `${formatCents(Math.abs(remaining), currency)} too many counted`;
+      : `${formatCents(Math.abs(remaining), currency)} too many counted`
+    : everyoneCounted
+      ? 'View da split'
+      : uncounted === 1
+        ? '1 player not counted yet'
+        : `${uncounted} players not counted yet`;
 
   return (
     <div className="screen">
@@ -124,7 +133,7 @@ export function CountView() {
           <p className="pot-panel__label">Left in pot</p>
           <p className={`display pot-panel__amount ${tickClass}`}>{formatCents(remaining, currency)}</p>
         </div>
-        <button type="button" className="btn btn-primary btn-block" disabled={!isZero} onClick={() => requestSettle()}>
+        <button type="button" className="btn btn-primary btn-block" disabled={!canSplit} onClick={() => requestSettle()}>
           {splitLabel}
         </button>
       </div>

@@ -49,6 +49,19 @@ describe('CountView', () => {
     expect(screen.getByText('€0')).toBeInTheDocument();
   });
 
+  it('keeps the split locked at zero remaining while a player is uncounted', () => {
+    saveState(seedCountingSession());
+    render(<App />);
+
+    fireEvent.change(screen.getByLabelText('Joe counted amount'), { target: { value: '100' } });
+
+    expect(screen.getByText('€0')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '1 player not counted yet' })).toBeDisabled();
+
+    fireEvent.change(screen.getByLabelText('Bruno counted amount'), { target: { value: '0' } });
+    expect(screen.getByRole('button', { name: 'View da split' })).not.toBeDisabled();
+  });
+
   it('shows the red danger state and a disabled split button when over-counted', () => {
     saveState(seedCountingSession());
     render(<App />);
