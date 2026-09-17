@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { parseAmountToCents } from '../domain/money';
+import { centsToInputValue, parseAmountToCents } from '../domain/money';
 
 interface AmountEntryProps {
   currency: string;
@@ -10,12 +10,6 @@ interface AmountEntryProps {
 }
 
 const DEFAULT_PRESETS = [500, 1000, 2000, 5000];
-
-/** "550" -> "5.5"; keeps the field editable in the same units parseAmountToCents expects. */
-export function centsToInputValue(cents: number): string {
-  const value = cents / 100;
-  return Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
-}
 
 export function AmountEntry({
   currency,

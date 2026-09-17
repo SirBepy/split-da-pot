@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { IconAvatar } from '../components/IconAvatar';
 import { remainingCents } from '../domain/ledger';
 import { formatCents } from '../domain/money';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 import { settlementView } from './settlementView';
 
 export function SettleView() {

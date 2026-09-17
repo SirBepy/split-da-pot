@@ -1,10 +1,10 @@
 import { CaretLeft } from '@phosphor-icons/react';
 import { useEffect, useRef, useState } from 'react';
-import { centsToInputValue } from '../components/AmountEntry';
+import { centsToInputValue } from '../domain/money';
 import { IconAvatar } from '../components/IconAvatar';
 import { formatCents, parseAmountToCents } from '../domain/money';
 import { remainingCents } from '../domain/ledger';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 
 export function CountView() {
   const { state, dispatch, activeSession, backToSessionFromCount, requestSettle } = useApp();

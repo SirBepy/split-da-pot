@@ -1,7 +1,7 @@
 import { ArrowDown, ArrowUp, CaretLeft, Minus } from '@phosphor-icons/react';
 import { IconAvatar } from '../components/IconAvatar';
 import { formatCents } from '../domain/money';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 import { settlementView } from './settlementView';
 
 export function HistoryDetailView() {

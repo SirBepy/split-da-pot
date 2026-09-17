@@ -1,7 +1,7 @@
 import { Check, PencilSimple, Plus } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { createId } from '../domain/types';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 import { IconAvatar } from './IconAvatar';
 import { nextIconName } from './iconPool';
 

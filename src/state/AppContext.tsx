@@ -1,8 +1,9 @@
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode, useReducer } from 'react';
+import { useEffect, useMemo, useState, type ReactNode, useReducer } from 'react';
 import { remainingCents } from '../domain/ledger';
 import type { Session } from '../domain/types';
 import { loadState, saveState, type AppState } from '../storage/store';
 import { reducer, type Action } from './reducer';
+import { AppContext } from './useApp';
 
 export type View =
   | 'home'
@@ -14,7 +15,7 @@ export type View =
   | 'settings'
   | 'runit';
 
-interface AppContextValue {
+export interface AppContextValue {
   state: AppState;
   dispatch: React.Dispatch<Action>;
   view: View;
@@ -33,8 +34,6 @@ interface AppContextValue {
   closeRunIt: () => void;
   finishNight: (sessionId: string) => void;
 }
-
-const AppContext = createContext<AppContextValue | null>(null);
 
 function initialView(state: AppState): View {
   const session = state.sessions.find((s) => s.id === state.activeSessionId);
@@ -96,10 +95,4 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
-}
-
-export function useApp(): AppContextValue {
-  const ctx = useContext(AppContext);
-  if (!ctx) throw new Error('useApp must be used within AppProvider');
-  return ctx;
 }

@@ -1,6 +1,6 @@
 import { CaretLeft } from '@phosphor-icons/react';
 import { RosterList } from '../components/RosterList';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 
 export function SettingsView() {
   const { state, dispatch, goHome } = useApp();

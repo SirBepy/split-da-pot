@@ -5,7 +5,7 @@ import { IconAvatar } from '../components/IconAvatar';
 import { PlayerSheet } from '../components/PlayerSheet';
 import { formatCents } from '../domain/money';
 import { playerInvestedCents, potTotalCents } from '../domain/ledger';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 
 export function SessionView() {
   const { state, activeSession, goToCount, openRunIt } = useApp();

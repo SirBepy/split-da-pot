@@ -16,6 +16,12 @@ export function parseAmountToCents(input: string): number | null {
   return Math.round(value * 100);
 }
 
+/** "550" -> "5.5"; keeps the field editable in the same units parseAmountToCents expects. */
+export function centsToInputValue(cents: number): string {
+  const value = cents / 100;
+  return Number.isInteger(value) ? String(value) : value.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+}
+
 export function formatCents(cents: number, currency: string): string {
   const negative = cents < 0;
   const abs = Math.abs(cents);

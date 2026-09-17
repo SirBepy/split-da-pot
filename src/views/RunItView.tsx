@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { IconAvatar } from '../components/IconAvatar';
 import { formatCents, parseAmountToCents } from '../domain/money';
 import { splitPots, type Pot } from '../domain/runit';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 
 function autoLabel(index: number): string {
   return index === 0 ? 'Main pot' : `Side pot ${index}`;

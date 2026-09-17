@@ -2,7 +2,7 @@ import { PencilSimple, Trash } from '@phosphor-icons/react';
 import { useState } from 'react';
 import { formatCents } from '../domain/money';
 import type { Player } from '../domain/types';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 import { AmountEntry } from './AmountEntry';
 import { IconAvatar } from './IconAvatar';
 import { Sheet } from './Sheet';

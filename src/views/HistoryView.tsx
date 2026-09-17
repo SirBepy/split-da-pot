@@ -2,7 +2,7 @@ import { CaretLeft } from '@phosphor-icons/react';
 import { IconAvatar } from '../components/IconAvatar';
 import { biggestWinner } from '../domain/ledger';
 import { formatCents } from '../domain/money';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 
 const FEEDBACK_URL = 'https://forms.gle/gNwNCPYFC5ACwx9z9';
 

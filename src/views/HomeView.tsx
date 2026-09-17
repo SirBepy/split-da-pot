@@ -5,7 +5,7 @@ import { biggestWinner } from '../domain/ledger';
 import { createId } from '../domain/types';
 import { IconAvatar } from '../components/IconAvatar';
 import { RosterList } from '../components/RosterList';
-import { useApp } from '../state/AppContext';
+import { useApp } from '../state/useApp';
 
 export function HomeView() {
   const { state, dispatch, goToSession, goToHistory, goToSettings, openHistoryDetail } = useApp();

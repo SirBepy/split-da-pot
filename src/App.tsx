@@ -1,4 +1,5 @@
-import { AppProvider, useApp } from './state/AppContext';
+import { AppProvider } from './state/AppContext';
+import { useApp } from './state/useApp';
 import { CountView } from './views/CountView';
 import { HistoryDetailView } from './views/HistoryDetailView';
 import { HistoryView } from './views/HistoryView';
