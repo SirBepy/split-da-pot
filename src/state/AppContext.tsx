@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, type ReactNode, useReducer } from 'react';
-import { allCounted, remainingCents } from '../domain/ledger';
+import { canSettle } from '../domain/ledger';
 import type { Session } from '../domain/types';
 import { loadState, saveState, type AppState } from '../storage/store';
 import { reducer, type Action } from './reducer';
@@ -70,7 +70,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
         setView('session');
       },
       requestSettle: () => {
-        if (!activeSession || remainingCents(activeSession) !== 0 || !allCounted(activeSession)) return false;
+        if (!activeSession || !canSettle(activeSession)) return false;
         setView('settle');
         return true;
       },

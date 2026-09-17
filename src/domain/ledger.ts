@@ -27,6 +27,12 @@ export function allCounted(session: Session): boolean {
   return session.playerIds.every((playerId) => playerId in session.finalCounts);
 }
 
+// Zero remaining alone can be a coincidence (a forgotten player counts as 0),
+// so settling also demands an explicit count for everyone.
+export function canSettle(session: Session): boolean {
+  return remainingCents(session) === 0 && allCounted(session);
+}
+
 export function netCents(session: Session, playerId: string): number {
   const counted = session.finalCounts[playerId] ?? 0;
   const cashOuts = sumEntries(session, 'cash-out', playerId);

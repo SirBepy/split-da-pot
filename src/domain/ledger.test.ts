@@ -3,6 +3,7 @@ import {
   addEntry,
   allCounted,
   biggestWinner,
+  canSettle,
   clearFinalCount,
   countedTotalCents,
   editEntry,
@@ -74,6 +75,18 @@ describe('ledger', () => {
     expect(allCounted(session)).toBe(false);
     session = setFinalCount(session, 'p2', 200);
     expect(allCounted(session)).toBe(true);
+  });
+
+  it('canSettle requires zero remaining AND every player explicitly counted', () => {
+    const entries = [
+      { id: 'e1', playerId: 'p1', kind: 'buy-in' as const, amountCents: 1000, at: 1 },
+      { id: 'e2', playerId: 'p2', kind: 'buy-in' as const, amountCents: 1000, at: 2 },
+    ];
+    // Coincidental zero: p1 holds the whole pot, p2 never counted.
+    expect(canSettle(makeSession({ entries, finalCounts: { p1: 2000 } }))).toBe(false);
+    // Everyone counted but chips missing.
+    expect(canSettle(makeSession({ entries, finalCounts: { p1: 1500, p2: 0 } }))).toBe(false);
+    expect(canSettle(makeSession({ entries, finalCounts: { p1: 2000, p2: 0 } }))).toBe(true);
   });
 
   it('biggestWinner picks the highest net player and returns null for an empty roster', () => {

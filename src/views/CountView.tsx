@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import { centsToInputValue } from '../domain/money';
 import { IconAvatar } from '../components/IconAvatar';
 import { formatCents, parseAmountToCents } from '../domain/money';
-import { allCounted, remainingCents } from '../domain/ledger';
+import { allCounted, canSettle, remainingCents } from '../domain/ledger';
 import { useApp } from '../state/useApp';
 
 export function CountView() {
@@ -72,9 +72,7 @@ export function CountView() {
   const isZero = remaining === 0;
   const everyoneCounted = allCounted(session);
   const uncounted = session.playerIds.filter((playerId) => !(playerId in session.finalCounts)).length;
-  // Zero remaining alone can be a coincidence (a forgotten player counts as 0),
-  // so the split also demands an explicit count for everyone.
-  const canSplit = isZero && everyoneCounted;
+  const canSplit = canSettle(session);
   const splitLabel = !isZero
     ? remaining > 0
       ? `${formatCents(remaining, currency)} left to count`
