@@ -12,18 +12,18 @@ export default defineConfig({
       manifest: {
         name: 'Split Da Pot',
         short_name: 'Split Da Pot',
-        theme_color: '#101014',
-        background_color: '#101014',
+        theme_color: '#0e1210',
+        background_color: '#0e1210',
         display: 'standalone',
         start_url: '.',
         icons: [
           {
-            src: '/icons/icon-192.png',
+            src: 'icons/icon-192.png',
             sizes: '192x192',
             type: 'image/png',
           },
           {
-            src: '/icons/icon-512.png',
+            src: 'icons/icon-512.png',
             sizes: '512x512',
             type: 'image/png',
           },
