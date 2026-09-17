@@ -63,13 +63,19 @@ export function RunItView() {
         </div>
 
         <div className="card" style={{ padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
-          <p className="field-label">{autoLabel(pots.length)}</p>
+          <label className="field-label" htmlFor="runit-pot-amount">
+            {autoLabel(pots.length)}
+          </label>
           <input
+            id="runit-pot-amount"
             className="text-input"
             inputMode="decimal"
             placeholder={`${currency}0`}
             value={amount}
             onChange={(event) => setAmount(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && canAdd) addPot();
+            }}
           />
           <div className="chip-row">
             {players.map((player) => (

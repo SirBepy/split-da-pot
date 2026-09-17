@@ -23,6 +23,8 @@ export function CountView() {
   const remaining = session ? remainingCents(session) : 0;
   const prevNegativeRef = useRef(remaining < 0);
   const [pulse, setPulse] = useState(false);
+  const prevRemainingRef = useRef(remaining);
+  const [tickClass, setTickClass] = useState('');
 
   useEffect(() => {
     const isNegative = remaining < 0;
@@ -33,6 +35,15 @@ export function CountView() {
       return () => clearTimeout(timer);
     }
     prevNegativeRef.current = isNegative;
+  }, [remaining]);
+
+  useEffect(() => {
+    if (remaining === prevRemainingRef.current) return;
+    const direction = remaining > prevRemainingRef.current ? 'up' : 'down';
+    prevRemainingRef.current = remaining;
+    setTickClass(`pot-panel__amount--tick-${direction}`);
+    const timer = setTimeout(() => setTickClass(''), 200);
+    return () => clearTimeout(timer);
   }, [remaining]);
 
   if (!session) return null;
@@ -85,18 +96,25 @@ export function CountView() {
           const raw = rawValues[playerId] ?? '';
           const showError = raw.trim() !== '' && parseAmountToCents(raw) === null;
           return (
-            <div key={playerId} className="card count-row">
-              <IconAvatar icon={player.icon} size="sm" />
-              <p style={{ flex: 1, fontWeight: 600 }}>{player.name}</p>
-              <input
-                className={`money-input ${showError ? 'money-input--error' : ''}`}
-                inputMode="decimal"
-                placeholder={`${currency}0`}
-                value={raw}
-                onChange={(event) => handleChange(playerId, event.target.value)}
-                aria-invalid={showError}
-                aria-label={`${player.name} counted amount`}
-              />
+            <div key={playerId} className="card">
+              <div className="count-row">
+                <IconAvatar icon={player.icon} size="sm" />
+                <p style={{ flex: 1, fontWeight: 600 }}>{player.name}</p>
+                <input
+                  className={`money-input ${showError ? 'money-input--error' : ''}`}
+                  inputMode="decimal"
+                  placeholder={`${currency}0`}
+                  value={raw}
+                  onChange={(event) => handleChange(playerId, event.target.value)}
+                  aria-invalid={showError}
+                  aria-label={`${player.name} counted amount`}
+                />
+              </div>
+              {showError && (
+                <p className="danger-text" style={{ fontSize: 12, padding: '0 14px 10px', textAlign: 'right' }}>
+                  Not a valid amount. Try 20 or 20,50.
+                </p>
+              )}
             </div>
           );
         })}
@@ -104,7 +122,7 @@ export function CountView() {
       <div className="bottom-bar bottom-bar--stack" style={{ gap: 10 }}>
         <div className={panelClass}>
           <p className="pot-panel__label">Left in pot</p>
-          <p className="display pot-panel__amount">{formatCents(remaining, currency)}</p>
+          <p className={`display pot-panel__amount ${tickClass}`}>{formatCents(remaining, currency)}</p>
         </div>
         <button type="button" className="btn btn-primary btn-block" disabled={!isZero} onClick={() => requestSettle()}>
           {splitLabel}

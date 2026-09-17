@@ -61,14 +61,18 @@ export function RosterList({ mode, selectedIds, excludeIds, onToggle, onAdd }: R
             className="player-row"
             style={index > 0 ? { borderTop: '1px solid var(--line)' } : undefined}
           >
-            <button
-              type="button"
-              onClick={() => (mode === 'manage' ? cycleIcon(player.id, player.icon) : undefined)}
-              aria-label={mode === 'manage' ? `Change ${player.name}'s icon` : undefined}
-              style={{ display: 'flex' }}
-            >
+            {mode === 'manage' ? (
+              <button
+                type="button"
+                onClick={() => cycleIcon(player.id, player.icon)}
+                aria-label={`Change ${player.name}'s icon`}
+                style={{ display: 'flex' }}
+              >
+                <IconAvatar icon={player.icon} />
+              </button>
+            ) : (
               <IconAvatar icon={player.icon} />
-            </button>
+            )}
             <div className="player-row__body">
               {isEditing ? (
                 <input
@@ -81,6 +85,7 @@ export function RosterList({ mode, selectedIds, excludeIds, onToggle, onAdd }: R
                   onKeyDown={(event) => {
                     if (event.key === 'Enter') commitEdit();
                   }}
+                  aria-label="Player name"
                 />
               ) : (
                 <button

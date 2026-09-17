@@ -57,11 +57,15 @@ export function AmountEntry({
             placeholder={`${currency}0`}
             value={raw}
             onChange={(event) => setRaw(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') submit();
+            }}
             aria-invalid={showError}
+            aria-label="Amount"
           />
           {showError && (
             <p className="danger-text" style={{ fontSize: 12, marginTop: 4 }}>
-              Not a valid amount
+              Not a valid amount. Try 20 or 20,50.
             </p>
           )}
         </div>

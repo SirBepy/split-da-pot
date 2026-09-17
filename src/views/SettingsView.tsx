@@ -17,8 +17,11 @@ export function SettingsView() {
       </div>
       <div className="screen-body">
         <div>
-          <p className="field-label">Currency symbol</p>
+          <label className="field-label" htmlFor="currency-symbol">
+            Currency symbol
+          </label>
           <input
+            id="currency-symbol"
             className="text-input"
             style={{ marginTop: 6, maxWidth: 120 }}
             value={state.settings.currency}

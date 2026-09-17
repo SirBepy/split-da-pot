@@ -56,6 +56,7 @@ export function PlayerSheet({ sessionId, player, onClose }: PlayerSheetProps) {
             onKeyDown={(event) => {
               if (event.key === 'Enter') commitName();
             }}
+            aria-label="Player name"
           />
         ) : (
           <>

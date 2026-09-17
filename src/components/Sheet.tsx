@@ -1,5 +1,5 @@
 import { X } from '@phosphor-icons/react';
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 
 interface SheetProps {
   title?: string;
@@ -8,6 +8,14 @@ interface SheetProps {
 }
 
 export function Sheet({ title, onClose, children }: SheetProps) {
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
     <div
       className="sheet-backdrop"
