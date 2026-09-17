@@ -16,7 +16,8 @@ Casino at midnight: near-black room, felt-green table surfaces, gold light on th
 - `--gold-bright: #f0c775` hover/active gold.
 - `--ink: #e8e6df` primary text, warm off-white.
 - `--ink-dim: #8fa398` secondary text, muted green-grey.
-- `--danger: #e2574b` negative pot, destructive actions.
+- `--danger: #e2574b` negative pot, destructive actions - large numerals (the 30px pot amount), borders, fills only. Measures 4.37:1 on `--felt` / 3.79:1 on `--felt-raised`, below the 4.5:1 AA small-text floor.
+- `--danger-text: #f07a6e` the small-text red (net pills, log entries, hint copy - anything under large-text size). Same hue family, measures 5.92:1 on `--felt` / 5.14:1 on `--felt-raised`.
 - `--ok: #4cc38a` zero-reached state, success.
 
 ## Type
